@@ -23,7 +23,7 @@ func _process(delta: float) -> void:
 		var shot_power := player.power * (1 + bonus)
 		shot_direction = shot_direction.normalized()
 		if shot_direction == Vector2.ZERO:
-			shot_direction = player.heading
+			shot_direction = player.heading #ovo sam mogao da stavim i u enter_tree
 		#print(shot_power, shot_direction)
 		#var state_data := PlayerStateData.new()
 		#state_data.shot_direction = shot_direction
