@@ -1,7 +1,7 @@
 extends BallState
 class_name BallStateShot
 
-const SHOT_HEIGHT := 5
+const SHOT_HEIGHT := 20
 const SHOT_SPRITE_SCALE := 0.8
 const SHOT_DURATION := 1000
 
@@ -9,12 +9,13 @@ var shot_start_time := Time.get_ticks_msec()
 
 
 func _enter_tree() -> void:
-	if ball.velocity.x >= 0:
-		animation_player.play("roll")
-		animation_player.advance(0)
-	else:
-		animation_player.play_backwards("roll")
-		animation_player.advance(0)
+	#if ball.velocity.x >= 0:
+		#animation_player.play("roll")
+		#animation_player.advance(0)
+	#else:
+		#animation_player.play_backwards("roll")
+		#animation_player.advance(0)
+	set_ball_animation_from_velocity()
 	ball_sprite.scale.y = SHOT_SPRITE_SCALE
 	ball.height = SHOT_HEIGHT
 	shot_start_time = Time.get_ticks_msec()
@@ -29,5 +30,5 @@ func _process(delta: float) -> void:
 
 func _exit_tree() -> void:
 	ball_sprite.scale.y = 1.0
-	ball.height = 0.0
+	#ball.height = 0.0
 
