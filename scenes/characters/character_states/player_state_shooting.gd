@@ -1,0 +1,3 @@
+extends PlayerState
+class_name PlayerStateShooting
+
