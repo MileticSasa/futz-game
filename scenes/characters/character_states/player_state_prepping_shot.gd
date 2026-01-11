@@ -22,6 +22,8 @@ func _process(delta: float) -> void:
 		var bonus := ease(ease_time, EASE_REWARD_FACTOR)
 		var shot_power := player.power * (1 + bonus)
 		shot_direction = shot_direction.normalized()
+		if shot_direction == Vector2.ZERO:
+			shot_direction = player.heading
 		#print(shot_power, shot_direction)
 		#var state_data := PlayerStateData.new()
 		#state_data.shot_direction = shot_direction
