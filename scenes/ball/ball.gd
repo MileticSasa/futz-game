@@ -4,7 +4,10 @@ class_name Ball
 enum State {CARRIED, FREEFORM, SHOT}
 
 const BOUNCINESS := 0.8
+const DISTANCE_HEIGHT_PASS := 130
 
+@export var air_connect_min_height: float
+@export var air_connect_max_height: float
 @export var friction_air: float
 @export var friction_ground: float
 
@@ -53,6 +56,19 @@ func pass_to(destination: Vector2) -> void:
 	var distance := position.distance_to(destination)
 	var intensity := sqrt(2 * distance * friction_ground)
 	velocity = intensity * direction
+	if distance > DISTANCE_HEIGHT_PASS:
+		height_velocity = (BallState.GRAVITY * distance) / (2 * intensity)
+		height_velocity *= 1.2 #ovo sam povecao da bi lopta isla oko visine glave igraca
 	carrier = null
 	switch_state(Ball.State.FREEFORM)
+
+
+func can_air_interact() -> bool:
+	return current_state != null and current_state.can_air_interact()
+
+
+func can_air_connect() -> bool:
+	return height >= air_connect_min_height and height <= air_connect_max_height
+
+
 

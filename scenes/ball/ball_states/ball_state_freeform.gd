@@ -18,3 +18,7 @@ func on_player_entered(body: Player) -> void:
 	ball.carrier = body
 	state_transition_requested.emit(Ball.State.CARRIED)
 
+
+func can_air_interact() -> bool:
+	return true
+
