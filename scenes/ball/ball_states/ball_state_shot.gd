@@ -25,7 +25,8 @@ func _process(delta: float) -> void:
 	if Time.get_ticks_msec() - shot_start_time > SHOT_DURATION:
 		state_transition_requested.emit(Ball.State.FREEFORM)
 	else:
-		ball.move_and_collide(ball.velocity * delta)
+		#ball.move_and_collide(ball.velocity * delta)
+		move_and_bounce(delta)
 
 
 func _exit_tree() -> void:
