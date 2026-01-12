@@ -65,7 +65,7 @@ func has_ball() -> bool:
 
 
 func on_animation_complete() -> void:
-	if current_state:
+	if current_state != null:
 		current_state.on_animation_complete()
 
 

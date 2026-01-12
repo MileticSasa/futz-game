@@ -1,7 +1,7 @@
 extends BallState
 class_name BallStateShot
 
-const SHOT_HEIGHT := 20
+const SHOT_HEIGHT := 5
 const SHOT_SPRITE_SCALE := 0.8
 const SHOT_DURATION := 1000
 
