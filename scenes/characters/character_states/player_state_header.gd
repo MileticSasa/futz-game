@@ -1,6 +1,8 @@
 extends PlayerState
 class_name PlayerStateHeader
 
+const BALL_HEIGHT_MIN := 10.0
+const BALL_HEIGHT_MAX := 30.0
 const BONUS_POWER := 1.3
 const HEIGHT_START := 0.1
 const HEIGHT_VELOCITY := 1.5
@@ -19,5 +21,5 @@ func _process(_delta: float) -> void:
 
 
 func on_ball_entered(contact_ball: Ball) -> void:
-	if contact_ball.can_air_connect():
+	if contact_ball.can_air_connect(BALL_HEIGHT_MIN, BALL_HEIGHT_MAX):
 		contact_ball.shoot(player.velocity.normalized() * player.power * BONUS_POWER)

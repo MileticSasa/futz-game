@@ -13,6 +13,8 @@ const GRAVITY := 8.0
 
 @export var ball: Ball
 @export var control_scheme: ControlScheme
+@export var own_goal: Goal
+@export var target_goal: Goal
 @export var power: float
 @export var speed: float 
 
@@ -47,7 +49,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 		current_state.queue_free()
 	
 	current_state = state_factory.get_fresh_state(state)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal)
 	current_state.state_transition_requested.connect(switch_state.bind())
 	current_state.name = "PlayerStateMachine: " + str(state)
 	call_deferred("add_child", current_state)

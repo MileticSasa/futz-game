@@ -6,8 +6,8 @@ enum State {CARRIED, FREEFORM, SHOT}
 const BOUNCINESS := 0.8
 const DISTANCE_HEIGHT_PASS := 130
 
-@export var air_connect_min_height: float
-@export var air_connect_max_height: float
+#@export var air_connect_min_height: float
+#@export var air_connect_max_height: float
 @export var friction_air: float
 @export var friction_ground: float
 
@@ -67,7 +67,7 @@ func can_air_interact() -> bool:
 	return current_state != null and current_state.can_air_interact()
 
 
-func can_air_connect() -> bool:
+func can_air_connect(air_connect_min_height: float, air_connect_max_height: float) -> bool:
 	return height >= air_connect_min_height and height <= air_connect_max_height
 
 
