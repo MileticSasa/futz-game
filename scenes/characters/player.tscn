@@ -1,9 +1,20 @@
-[gd_scene load_steps=19 format=3 uid="uid://vc0o5be4f5hf"]
+[gd_scene load_steps=23 format=3 uid="uid://vc0o5be4f5hf"]
 
 [ext_resource type="Texture2D" uid="uid://dk1iv8dlrwt1w" path="res://assets/art/characters/soccer-player.png" id="1_rp718"]
 [ext_resource type="Script" uid="uid://cs4vh8wr8dmpi" path="res://scenes/characters/player.gd" id="1_yewv4"]
+[ext_resource type="Shader" uid="uid://dtvjcpatasy15" path="res://shaders/replace_color.gdshader" id="2_atpat"]
+[ext_resource type="Texture2D" uid="uid://38a5m40tvccs" path="res://assets/art/palettes/skin-colors-palette.png" id="3_6eyoc"]
 [ext_resource type="Texture2D" uid="uid://bxck5lrmxsg35" path="res://assets/art/props/1p.png" id="3_dyp2m"]
+[ext_resource type="Texture2D" uid="uid://3s5kssfbas3s" path="res://assets/art/palettes/teams-color-palette.png" id="3_kqtwu"]
 [ext_resource type="Texture2D" uid="uid://bf1iquibp3umt" path="res://assets/art/characters/player-shadow.png" id="4_atpat"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kqtwu"]
+resource_local_to_scene = true
+shader = ExtResource("2_atpat")
+shader_parameter/team_palette = ExtResource("3_kqtwu")
+shader_parameter/skin_color_palette = ExtResource("3_6eyoc")
+shader_parameter/team_color = 0
+shader_parameter/skin_color = 1
 
 [sub_resource type="Animation" id="Animation_76oj4"]
 length = 0.001
@@ -267,6 +278,7 @@ power = 150.0
 speed = 80.0
 
 [node name="PlayerSprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_kqtwu")
 position = Vector2(-1, 0)
 texture = ExtResource("1_rp718")
 centered = false
@@ -287,6 +299,7 @@ libraries = {
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, -3)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_rp718")
@@ -311,6 +324,7 @@ collision_mask = 4
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BallDetectionArea"]
+visible = false
 position = Vector2(0, -8)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_dyp2m")

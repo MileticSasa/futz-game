@@ -1,0 +1,42 @@
+shader_type canvas_item;
+
+group_uniforms Palettes;
+uniform sampler2D team_palette;
+uniform sampler2D skin_color_palette;
+group_uniforms;
+
+uniform int team_color : hint_range(0, 8, 1);
+uniform int skin_color : hint_enum("LIGHT", "MEDIUM", "DARK");
+
+
+vec2 px_to_uv(ivec2 pos, ivec2 tex_size)
+{
+	return vec2((float(pos[0]) + 0.5) / float(tex_size[0]), (float(pos[1]) + 0.5)/ float(tex_size[1]));
+}
+
+
+vec4 get_palette_color(vec4 color, sampler2D palette, int selection)
+{
+	ivec2 tex_size = textureSize(palette, 0);
+	for(int i = 0; i < tex_size[0]; i++)
+	{
+		vec2 uv_color_ref = px_to_uv(ivec2(i, 0), tex_size);
+		vec4 color_ref = texture(palette, uv_color_ref);
+		if (color == color_ref)
+		{
+			vec2 uv_color_destination = px_to_uv(ivec2(i, selection), tex_size);
+			return texture(palette, uv_color_destination);
+		}
+	}
+	return color;
+}
+
+
+void fragment() {
+	COLOR = get_palette_color(COLOR, team_palette, team_color);
+	if (skin_color > 0)
+	{
+		COLOR = get_palette_color(COLOR, skin_color_palette, skin_color);
+	}
+
+}

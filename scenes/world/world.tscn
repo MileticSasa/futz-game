@@ -49,7 +49,7 @@ ball = NodePath("Ball")
 goal_home = NodePath("PitchObjects/GoalHome")
 goal_away = NodePath("PitchObjects/GoalAway")
 team_home = "FRANCE"
-team_away = "GERMANY"
+team_away = "BRAZIL"
 
 [node name="Spawns" type="Node2D" parent="ActorsContainer"]
 position = Vector2(425, 180)

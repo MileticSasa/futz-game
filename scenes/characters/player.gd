@@ -12,6 +12,7 @@ const CONTROL_SCHEME_MAP: Dictionary = {
 	ControlScheme.P1: preload("res://assets/art/props/1p.png"),
 	ControlScheme.P2: preload("res://assets/art/props/2p.png")
 }
+const COUNTRIES := ["DEFAULT", "FRANCE", "ARGENTINA", "BRAZIL", "ENGLAND", "GERMANY", "ITALY", "SPAIN", "USA"]
 const GRAVITY := 8.0
 
 @export var ball: Ball
@@ -27,6 +28,7 @@ const GRAVITY := 8.0
 @onready var player_sprite: Sprite2D = $PlayerSprite
 @onready var teammate_detection_area: Area2D = $TeammateDetectionArea
 
+var country := ""
 var fullname := ""
 var heading := Vector2.RIGHT
 var height := 0.0
@@ -40,6 +42,7 @@ var skin_color := Player.SkinColor.MEDIUM
 func _ready() -> void:
 	set_control_texture()
 	switch_state(State.MOVING)
+	set_shader_properties()
 
 
 func _process(delta: float) -> void:
@@ -50,7 +53,14 @@ func _process(delta: float) -> void:
 	move_and_slide()
 
 
-func initialize(context_pos: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal, context_data: PlayerResource) -> void:
+func set_shader_properties() -> void:
+	player_sprite.material.set_shader_parameter("skin_color", skin_color)
+	var country_color := COUNTRIES.find(country)
+	country_color = clampi(country_color, 0, COUNTRIES.size() - 1)
+	player_sprite.material.set_shader_parameter("team_color", country_color)
+
+
+func initialize(context_pos: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal, context_data: PlayerResource, context_country: String) -> void:
 	position = context_pos
 	ball = context_ball
 	target_goal = context_target_goal
@@ -61,6 +71,7 @@ func initialize(context_pos: Vector2, context_ball: Ball, context_own_goal: Goal
 	skin_color = context_data.skin_color
 	fullname = context_data.full_name
 	heading = Vector2.LEFT if target_goal.position.x < position.x else Vector2.RIGHT
+	country = context_country
 
 
 func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:
