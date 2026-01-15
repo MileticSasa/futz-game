@@ -26,6 +26,7 @@ const WALK_ANIM_THRESHOLD := 0.6
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var ball_detection_area: Area2D = $BallDetectionArea
 @onready var control_sprite: Sprite2D = $PlayerSprite/ControlSprite
+@onready var opponent_detect_area: Area2D = $OpponentDetectArea
 @onready var player_sprite: Sprite2D = $PlayerSprite
 @onready var teammate_detection_area: Area2D = $TeammateDetectionArea
 @onready var tackle_dmg_emmiter_area: Area2D = $TackleDmgEmmiterArea
@@ -83,7 +84,7 @@ func initialize(context_pos: Vector2, context_ball: Ball, context_own_goal: Goal
 
 
 func setup_ai_behavior() -> void:
-	ai_behavior.setup(self, ball)
+	ai_behavior.setup(self, ball, opponent_detect_area)
 	ai_behavior.name = "AI Behavior"
 	#call_deferred("add_child", ai_behavior)
 	add_child(ai_behavior)
@@ -130,9 +131,11 @@ func flip_sprites() -> void:
 	if heading == Vector2.RIGHT:
 		player_sprite.flip_h = false
 		tackle_dmg_emmiter_area.scale.x = 1
+		opponent_detect_area.scale.x = 1
 	elif heading == Vector2.LEFT:
 		player_sprite.flip_h = true
 		tackle_dmg_emmiter_area.scale.x = -1
+		opponent_detect_area.scale.x = -1
 
 
 func set_sprite_visibility() -> void:
