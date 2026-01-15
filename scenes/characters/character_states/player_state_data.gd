@@ -1,12 +1,18 @@
 extends Node
 class_name PlayerStateData
 
+var hurt_direction: Vector2
 var shot_direction: Vector2
 var shot_power: float
 
 
 static func build() -> PlayerStateData:
 	return PlayerStateData.new()
+
+
+func set_hurt_direction(dir: Vector2) -> PlayerStateData:
+	hurt_direction = dir
+	return self
 
 
 func set_shot_direction(dir: Vector2) -> PlayerStateData:

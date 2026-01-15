@@ -5,6 +5,7 @@ enum State {CARRIED, FREEFORM, SHOT}
 
 const BOUNCINESS := 0.8
 const DISTANCE_HEIGHT_PASS := 130
+const TUMBLE_HEIGHT_VELOCITY := 3.0
 
 #@export var air_connect_min_height: float
 #@export var air_connect_max_height: float
@@ -45,6 +46,13 @@ func shoot(shoot_velocity: Vector2) -> void:
 	velocity = shoot_velocity
 	carrier = null
 	switch_state(Ball.State.SHOT)
+
+
+func tumble(tumble_velocity: Vector2) -> void:
+	velocity = tumble_velocity
+	carrier = null
+	height_velocity = TUMBLE_HEIGHT_VELOCITY
+	switch_state(Ball.State.FREEFORM)
 
 
 func stop() -> void:

@@ -10,6 +10,7 @@ var is_tackling_complete: bool = false
 
 func _enter_tree() -> void:
 	animation_player.play("tackle")
+	tackle_dmg_emitter_area.monitoring = true
 
 
 func _process(delta: float) -> void:
@@ -20,4 +21,8 @@ func _process(delta: float) -> void:
 			time_finish_tackle = Time.get_ticks_msec()
 	elif Time.get_ticks_msec() - time_finish_tackle > PRIOR_TACKLE_DURATION:
 		transition_state(Player.State.RECOVERING)
+
+
+func _exit_tree() -> void:
+	tackle_dmg_emitter_area.monitoring = false
 
