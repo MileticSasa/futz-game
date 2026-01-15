@@ -4,7 +4,7 @@ class_name PlayerStateMoving
 
 func _process(_delta: float) -> void:
 	if player.control_scheme == Player.ControlScheme.CPU:
-		pass #ovo ce da kontrolise AI
+		ai_behavior.process_ai()
 	else:
 		handle_human_movement()
 	
