@@ -36,3 +36,7 @@ func transition_state(new_state: Player.State, psd: PlayerStateData = PlayerStat
 func on_animation_complete() -> void:
 	pass
 
+
+func can_carry_ball() -> bool:
+	return false #uvek vraca false osim u moving_state kad igrac nije golman
+

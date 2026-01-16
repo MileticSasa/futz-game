@@ -15,6 +15,7 @@ const TUMBLE_HEIGHT_VELOCITY := 3.0
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var player_detection_area: Area2D = $PlayerDetectionArea
 @onready var ball_sprite: Sprite2D = $BallSprite
+@onready var scoring_ray_cast: RayCast2D = $ScoringRayCast
 
 var carrier: Player = null
 var current_state: BallState = null
@@ -30,6 +31,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	ball_sprite.position = Vector2.UP * height
+	scoring_ray_cast.rotation = velocity.angle()
 
 
 func switch_state(state: Ball.State) -> void:
@@ -77,6 +79,12 @@ func can_air_interact() -> bool:
 
 func can_air_connect(air_connect_min_height: float, air_connect_max_height: float) -> bool:
 	return height >= air_connect_min_height and height <= air_connect_max_height
+
+
+func is_headed_for_scoring_area(scoring_area: Area2D) -> bool:
+	if not scoring_ray_cast.is_colliding():
+		return false
+	return scoring_ray_cast.get_collider() == scoring_area
 
 
 

@@ -4,7 +4,7 @@ class_name Player
 enum ControlScheme {CPU, P1, P2}
 enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 enum SkinColor {LIGHT, MEDIUM, DARK}
-enum State {MOVING, TACKLING, RECOVERING, PASSING, PREPPING_SHOT, SHOOTING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT}
+enum State {MOVING, TACKLING, RECOVERING, PASSING, PREPPING_SHOT, SHOOTING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING}
 
 const BALL_CONTROL_HEIGHT_MAX := 20.0
 const CONTROL_SCHEME_MAP: Dictionary = {
@@ -26,13 +26,16 @@ const WALK_ANIM_THRESHOLD := 0.6
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var ball_detection_area: Area2D = $BallDetectionArea
 @onready var control_sprite: Sprite2D = $PlayerSprite/ControlSprite
+@onready var goalie_hands_collider: CollisionShape2D = $GoalieHands/GoalieHandsCollider
 @onready var opponent_detect_area: Area2D = $OpponentDetectArea
+@onready var permanent_damage_emit_area: Area2D = $PermanentDamageEmitArea
 @onready var player_sprite: Sprite2D = $PlayerSprite
 @onready var teammate_detection_area: Area2D = $TeammateDetectionArea
 @onready var tackle_dmg_emmiter_area: Area2D = $TackleDmgEmmiterArea
 
-var ai_behavior: AIBehavior = AIBehavior.new()
+var ai_behavior_factory: AIBehaviorFactory = AIBehaviorFactory.new()
 var country := ""
+var current_ai_behavior: AIBehavior = null
 var fullname := ""
 var heading := Vector2.RIGHT
 var height := 0.0
@@ -47,10 +50,13 @@ var weight_on_duty_steering := 0.0 # ovo mi odredjuje faktor koji utice na igrac
 
 func _ready() -> void:
 	set_control_texture()
+	setup_ai_behavior()
 	switch_state(State.MOVING)
 	set_shader_properties()
-	setup_ai_behavior()
+	permanent_damage_emit_area.monitoring = role == Player.Role.GOALIE
+	goalie_hands_collider.disabled = role != Player.Role.GOALIE
 	tackle_dmg_emmiter_area.body_entered.connect(on_tackle_player.bind())
+	permanent_damage_emit_area.body_entered.connect(on_tackle_player.bind())
 	spawn_position = position
 
 
@@ -84,10 +90,11 @@ func initialize(context_pos: Vector2, context_ball: Ball, context_own_goal: Goal
 
 
 func setup_ai_behavior() -> void:
-	ai_behavior.setup(self, ball, opponent_detect_area)
-	ai_behavior.name = "AI Behavior"
+	current_ai_behavior = ai_behavior_factory.get_ai_behavior(role)
+	current_ai_behavior.setup(self, ball, opponent_detect_area)
+	current_ai_behavior.name = "AI Behavior"
 	#call_deferred("add_child", ai_behavior)
-	add_child(ai_behavior)
+	add_child(current_ai_behavior)
 
 
 func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:
@@ -95,7 +102,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 		current_state.queue_free()
 	
 	current_state = state_factory.get_fresh_state(state)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal, tackle_dmg_emmiter_area, ai_behavior)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal, tackle_dmg_emmiter_area, current_ai_behavior)
 	current_state.state_transition_requested.connect(switch_state.bind())
 	current_state.name = "PlayerStateMachine: " + str(state)
 	call_deferred("add_child", current_state)
@@ -157,6 +164,10 @@ func set_control_texture() -> void:
 func is_facing_target_goal() -> bool:
 	var direction_to_target_goal := position.direction_to(target_goal.position)
 	return heading.dot(direction_to_target_goal) > 0 #dot mi vraca kosinus ugla izmedju dva vektora. kosinus je pozitivan ako je ugao izmedju -90 i 90
+
+
+func can_carry_ball() -> bool:
+	return current_state != null and current_state.can_carry_ball()
 
 
 func control_ball() -> void:
