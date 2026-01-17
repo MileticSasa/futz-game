@@ -1,6 +1,8 @@
 extends CharacterBody2D
 class_name Player
 
+signal swap_requested(player: Player)
+
 enum ControlScheme {CPU, P1, P2}
 enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 enum SkinColor {LIGHT, MEDIUM, DARK}
