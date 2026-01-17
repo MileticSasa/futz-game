@@ -5,6 +5,8 @@ enum State {CARRIED, FREEFORM, SHOT}
 
 const BOUNCINESS := 0.8
 const DISTANCE_HEIGHT_PASS := 130
+const DURATION_TUMBLE_LOCK := 200
+const DURATION_PASS_LOCK := 500
 const TUMBLE_HEIGHT_VELOCITY := 3.0
 
 #@export var air_connect_min_height: float
@@ -34,11 +36,11 @@ func _process(_delta: float) -> void:
 	scoring_ray_cast.rotation = velocity.angle()
 
 
-func switch_state(state: Ball.State) -> void:
+func switch_state(state: Ball.State, data: BallStateData = BallStateData.new()) -> void:
 	if current_state != null:
 		current_state.queue_free()
 	current_state = state_factory.get_fresh_state(state)
-	current_state.setup(self, player_detection_area, carrier, animation_player, ball_sprite)
+	current_state.setup(self, player_detection_area, carrier, animation_player, ball_sprite, data)
 	current_state.state_transition_requested.connect(switch_state.bind())
 	current_state.name = "BallStateMachine"
 	call_deferred("add_child", current_state)
@@ -54,7 +56,7 @@ func tumble(tumble_velocity: Vector2) -> void:
 	velocity = tumble_velocity
 	carrier = null
 	height_velocity = TUMBLE_HEIGHT_VELOCITY
-	switch_state(Ball.State.FREEFORM)
+	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(DURATION_TUMBLE_LOCK))
 
 
 func stop() -> void:
@@ -70,7 +72,7 @@ func pass_to(destination: Vector2) -> void:
 		height_velocity = (BallState.GRAVITY * distance) / (2 * intensity)
 		height_velocity *= 1.2 #ovo sam povecao da bi lopta isla oko visine glave igraca
 	carrier = null
-	switch_state(Ball.State.FREEFORM)
+	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(DURATION_PASS_LOCK))
 
 
 func can_air_interact() -> bool:
