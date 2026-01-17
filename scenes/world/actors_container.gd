@@ -7,8 +7,8 @@ const PLAYER_PREFAB := preload("res://scenes/characters/player.tscn")
 @export var ball: Ball
 @export var goal_home: Goal
 @export var goal_away: Goal
-@export var team_home: String
-@export var team_away: String
+#@export var team_home: String
+#@export var team_away: String
 
 @onready var spawns: Node2D = $Spawns
 
@@ -18,11 +18,11 @@ var time_since_last_cache_refresh := Time.get_ticks_msec()
 
 
 func _ready() -> void:
-	squad_home = spawn_players(team_home, goal_home)
+	squad_home = spawn_players(GameManager.countries[0], goal_home)
 	spawns.scale.x = -1
-	goal_home.initialize(team_home)
-	squad_away = spawn_players(team_away, goal_away)
-	goal_away.initialize(team_away)
+	goal_home.initialize(GameManager.countries[0])
+	squad_away = spawn_players(GameManager.countries[1], goal_away)
+	goal_away.initialize(GameManager.countries[1])
 	time_since_last_cache_refresh = Time.get_ticks_msec()
 	
 	var player: Player = get_children().filter(func(p): return p is Player)[4]
