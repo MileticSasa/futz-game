@@ -8,8 +8,10 @@ func _enter_tree() -> void:
 
 
 func on_animation_complete() -> void:
-	var pass_target := find_teammate_in_view()
+	var pass_target := state_data.pass_target #ovde dodajem igracu kog sam prosledio
 	if pass_target == null:
+		pass_target =  find_teammate_in_view() #ako je igrac kog sam prosledio null, onda trazim
+	if pass_target == null: #ako je pass_target i posle trazenja null, onda samo prosledim loptu u prazno
 		ball.pass_to(ball.position + player.heading * player.speed)
 	else:
 		ball.pass_to(pass_target.position + pass_target.velocity)

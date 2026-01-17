@@ -40,3 +40,7 @@ func on_animation_complete() -> void:
 func can_carry_ball() -> bool:
 	return false #uvek vraca false osim u moving_state kad igrac nije golman
 
+
+func can_pass() -> bool:
+	return false #overrajdovacu u stejtovima koji vracaju true
+

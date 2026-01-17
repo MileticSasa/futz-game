@@ -17,3 +17,7 @@ func _process(_delta: float) -> void:
 		transition_state(Player.State.MOVING)
 
 
+func can_pass() -> bool:
+	return true
+
+

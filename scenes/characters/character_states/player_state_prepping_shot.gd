@@ -32,3 +32,8 @@ func _process(delta: float) -> void:
 		#state_transition_requested.emit(Player.State.SHOOTING)
 		transition_state(Player.State.SHOOTING, data)
 
+
+func can_pass() -> bool:
+	return true
+
+
