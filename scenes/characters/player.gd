@@ -6,7 +6,7 @@ signal swap_requested(player: Player)
 enum ControlScheme {CPU, P1, P2}
 enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 enum SkinColor {LIGHT, MEDIUM, DARK}
-enum State {MOVING, TACKLING, RECOVERING, PASSING, PREPPING_SHOT, SHOOTING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING}
+enum State {MOVING, TACKLING, RECOVERING, PASSING, PREPPING_SHOT, SHOOTING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING}
 
 const BALL_CONTROL_HEIGHT_MAX := 20.0
 const CONTROL_SCHEME_MAP: Dictionary = {
@@ -60,6 +60,7 @@ func _ready() -> void:
 	tackle_dmg_emmiter_area.body_entered.connect(on_tackle_player.bind())
 	permanent_damage_emit_area.body_entered.connect(on_tackle_player.bind())
 	spawn_position = position
+	GameEvents.team_scored.connect(on_team_scored.bind())
 
 
 func _process(delta: float) -> void:
@@ -185,6 +186,13 @@ func control_ball() -> void:
 func on_tackle_player(player: Player) -> void:
 	if player != self and player.country != country and player == ball.carrier:
 		player.get_hurt(position.direction_to(player.position))
+
+
+func on_team_scored(team_scored_on: String) -> void:
+	if country == team_scored_on:
+		switch_state(Player.State.MOURNING)
+	else:
+		switch_state(Player.State.CELEBRATING)
 
 
 func on_animation_complete() -> void:

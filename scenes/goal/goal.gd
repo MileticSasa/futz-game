@@ -5,13 +5,24 @@ class_name Goal
 @onready var targets: Node2D = $Targets
 @onready var scoring_area: Area2D = $ScoringArea
 
+var country := ""
+
 
 func _ready() -> void:
 	back_net_area.body_entered.connect(on_ball_enter_back_net.bind())
+	scoring_area.body_entered.connect(on_ball_enter_scoring_area.bind())
+
+
+func initialize(context_country: String) -> void:
+	country = context_country
 
 
 func on_ball_enter_back_net(ball: Ball) -> void:
 	ball.stop()
+
+
+func on_ball_enter_scoring_area(_ball: Ball) -> void:
+	GameEvents.team_scored.emit(country)
 
 
 func get_random_target_position() -> Vector2:
