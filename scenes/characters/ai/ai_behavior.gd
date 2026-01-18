@@ -56,9 +56,9 @@ func is_ball_carried_by_oppenent() -> bool:
 	return ball.carrier != null and ball.carrier.country != player.country
 
 
-func face_towards_target_goal() -> void:
-	if not player.is_facing_target_goal():
-		player.heading = player.heading * -1
+#func face_towards_target_goal() -> void:
+	#if not player.is_facing_target_goal():
+		#player.heading = player.heading * -1
 
 
 func has_opponent_nearby() -> bool:

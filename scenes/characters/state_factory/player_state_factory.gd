@@ -19,7 +19,8 @@ func _init() -> void:
 		Player.State.HURT : PlayerStateHurt,
 		Player.State.DIVING : PlayerStateDiving,
 		Player.State.CELEBRATING : PlayerStateCelebrating,
-		Player.State.MOURNING : PlayerStateMourning
+		Player.State.MOURNING : PlayerStateMourning,
+		Player.State.RESETING : PlayerStateReseting
 	}
 
 

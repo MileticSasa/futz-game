@@ -44,3 +44,7 @@ func can_carry_ball() -> bool:
 func can_pass() -> bool:
 	return false #overrajdovacu u stejtovima koji vracaju true
 
+
+func is_ready_for_kickoff() -> bool:
+	return false
+

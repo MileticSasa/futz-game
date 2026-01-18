@@ -6,7 +6,7 @@ signal swap_requested(player: Player)
 enum ControlScheme {CPU, P1, P2}
 enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 enum SkinColor {LIGHT, MEDIUM, DARK}
-enum State {MOVING, TACKLING, RECOVERING, PASSING, PREPPING_SHOT, SHOOTING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING}
+enum State {MOVING, TACKLING, RECOVERING, PASSING, PREPPING_SHOT, SHOOTING, HEADER, VOLLEY_KICK, BICYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING, RESETING}
 
 const BALL_CONTROL_HEIGHT_MAX := 20.0
 const CONTROL_SCHEME_MAP: Dictionary = {
@@ -42,6 +42,7 @@ var fullname := ""
 var heading := Vector2.RIGHT
 var height := 0.0
 var height_velocity := 0.0
+var kickoff_position := Vector2.ZERO
 var current_state: PlayerState = null
 var state_factory := PlayerStateFactory.new()
 var role := Player.Role.MIDFIELD
@@ -78,7 +79,7 @@ func set_shader_properties() -> void:
 	player_sprite.material.set_shader_parameter("team_color", country_color)
 
 
-func initialize(context_pos: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal, context_data: PlayerResource, context_country: String) -> void:
+func initialize(context_pos: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal, context_data: PlayerResource, context_country: String, context_kickoff: Vector2) -> void:
 	position = context_pos
 	ball = context_ball
 	target_goal = context_target_goal
@@ -90,6 +91,7 @@ func initialize(context_pos: Vector2, context_ball: Ball, context_own_goal: Goal
 	fullname = context_data.full_name
 	heading = Vector2.LEFT if target_goal.position.x < position.x else Vector2.RIGHT
 	country = context_country
+	kickoff_position = context_kickoff
 
 
 func setup_ai_behavior() -> void:
@@ -137,6 +139,11 @@ func set_heading() -> void:
 		heading = Vector2.LEFT
 
 
+func face_towards_target_goal() -> void:
+	if not is_facing_target_goal():
+		heading = heading * -1
+
+
 func flip_sprites() -> void:
 	if heading == Vector2.RIGHT:
 		player_sprite.flip_h = false
@@ -181,6 +188,10 @@ func can_carry_ball() -> bool:
 func control_ball() -> void:
 	if ball.height > BALL_CONTROL_HEIGHT_MAX:
 		switch_state(Player.State.CHEST_CONTROL)
+
+
+func is_ready_for_kickoff() -> bool:
+	return current_state != null and current_state.is_ready_for_kickoff()
 
 
 func on_tackle_player(player: Player) -> void:
