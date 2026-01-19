@@ -19,6 +19,7 @@ const TUMBLE_HEIGHT_VELOCITY := 3.0
 @onready var player_detection_area: Area2D = $PlayerDetectionArea
 @onready var ball_sprite: Sprite2D = $BallSprite
 @onready var scoring_ray_cast: RayCast2D = $ScoringRayCast
+@onready var shot_paarticles: GPUParticles2D = $ShotPaarticles
 
 var carrier: Player = null
 var current_state: BallState = null
@@ -45,7 +46,7 @@ func switch_state(state: Ball.State, data: BallStateData = BallStateData.new()) 
 	if current_state != null:
 		current_state.queue_free()
 	current_state = state_factory.get_fresh_state(state)
-	current_state.setup(self, player_detection_area, carrier, animation_player, ball_sprite, data)
+	current_state.setup(self, player_detection_area, carrier, animation_player, ball_sprite, shot_paarticles, data)
 	current_state.state_transition_requested.connect(switch_state.bind())
 	current_state.name = "BallStateMachine"
 	call_deferred("add_child", current_state)

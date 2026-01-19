@@ -34,6 +34,8 @@ const WALK_ANIM_THRESHOLD := 0.6
 @onready var player_sprite: Sprite2D = $PlayerSprite
 @onready var teammate_detection_area: Area2D = $TeammateDetectionArea
 @onready var tackle_dmg_emmiter_area: Area2D = $TackleDmgEmmiterArea
+@onready var root_particles: Node2D = $RootParticles
+@onready var run_particles: GPUParticles2D = $RootParticles/RunParticles
 
 var ai_behavior_factory: AIBehaviorFactory = AIBehaviorFactory.new()
 var country := ""
@@ -152,10 +154,12 @@ func flip_sprites() -> void:
 		player_sprite.flip_h = false
 		tackle_dmg_emmiter_area.scale.x = 1
 		opponent_detect_area.scale.x = 1
+		root_particles.scale.x = 1
 	elif heading == Vector2.LEFT:
 		player_sprite.flip_h = true
 		tackle_dmg_emmiter_area.scale.x = -1
 		opponent_detect_area.scale.x = -1
+		root_particles.scale.x = -1
 
 
 func set_control_scheme(scheme: ControlScheme) -> void: 
@@ -165,6 +169,7 @@ func set_control_scheme(scheme: ControlScheme) -> void:
 
 func set_sprite_visibility() -> void:
 	control_sprite.visible = has_ball() or not control_scheme == ControlScheme.CPU
+	run_particles.emitting = velocity.length() == speed
 
 
 func get_hurt(hurt_origin: Vector2) -> void:
