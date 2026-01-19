@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://drv7sxgoois15"]
+[gd_scene load_steps=13 format=3 uid="uid://drv7sxgoois15"]
 
 [ext_resource type="Texture2D" uid="uid://co8wtndsawvup" path="res://assets/art/backgrounds/pitch-background.png" id="1_dphjl"]
 [ext_resource type="Script" uid="uid://c3xyj3v31irw3" path="res://scenes/camera.gd" id="1_t5ptc"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://5xyws8w1duhq" path="res://assets/art/backgrounds/top-wall.png" id="6_j2gmx"]
 [ext_resource type="Texture2D" uid="uid://7s3p6kd66vb7" path="res://assets/art/backgrounds/bottom-wall.png" id="7_1yooq"]
 [ext_resource type="Texture2D" uid="uid://dkvamchn6gw8d" path="res://assets/art/backgrounds/side-wall.png" id="8_gb53w"]
+[ext_resource type="PackedScene" uid="uid://blett3h4fimwg" path="res://scenes/ui/ui.tscn" id="11_5qq27"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gb53w"]
 size = Vector2(802, 8)
@@ -140,3 +141,5 @@ polygon = PackedVector2Array(14, -1, 28, -1, 14, 115, 0, 115)
 
 [node name="Ball" parent="ActorsContainer" instance=ExtResource("5_v5dby")]
 position = Vector2(425, 180)
+
+[node name="UI" parent="." instance=ExtResource("11_5qq27")]

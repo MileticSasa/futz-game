@@ -62,6 +62,8 @@ func _ready() -> void:
 	permanent_damage_emit_area.body_entered.connect(on_tackle_player.bind())
 	spawn_position = position
 	GameEvents.team_scored.connect(on_team_scored.bind())
+	var initial_position := kickoff_position if country == GameManager.countries[0] else spawn_position
+	switch_state(State.RESETING, PlayerStateData.new().set_reset_position(initial_position))
 
 
 func _process(delta: float) -> void:
@@ -153,6 +155,11 @@ func flip_sprites() -> void:
 		player_sprite.flip_h = true
 		tackle_dmg_emmiter_area.scale.x = -1
 		opponent_detect_area.scale.x = -1
+
+
+func set_control_scheme(scheme: ControlScheme) -> void: 
+	control_scheme = scheme
+	set_control_texture()
 
 
 func set_sprite_visibility() -> void:

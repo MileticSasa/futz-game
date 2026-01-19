@@ -7,6 +7,7 @@ const BOUNCINESS := 0.8
 const DISTANCE_HEIGHT_PASS := 130
 const DURATION_TUMBLE_LOCK := 200
 const DURATION_PASS_LOCK := 500
+const KICKOFF_PASS_DISTANCE := 30.0
 const TUMBLE_HEIGHT_VELOCITY := 3.0
 
 #@export var air_connect_min_height: float
@@ -32,6 +33,7 @@ func _ready() -> void:
 	switch_state(State.FREEFORM)
 	spawn_position = position
 	GameEvents.team_reset.connect(on_team_reset.bind())
+	GameEvents.kickoff_started.connect(on_kickoff_started.bind())
 
 
 func _process(_delta: float) -> void:
@@ -66,7 +68,7 @@ func stop() -> void:
 	velocity = Vector2.ZERO
 
 
-func pass_to(destination: Vector2) -> void:
+func pass_to(destination: Vector2, lock_duration: int = DURATION_PASS_LOCK) -> void:
 	var direction := position.direction_to(destination)
 	var distance := position.distance_to(destination)
 	var intensity := sqrt(2 * distance * friction_ground)
@@ -75,7 +77,7 @@ func pass_to(destination: Vector2) -> void:
 		height_velocity = (BallState.GRAVITY * distance) / (2 * intensity)
 		height_velocity *= 1.2 #ovo sam povecao da bi lopta isla oko visine glave igraca
 	carrier = null
-	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(DURATION_PASS_LOCK))
+	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(lock_duration))
 
 
 func can_air_interact() -> bool:
@@ -96,6 +98,9 @@ func on_team_reset() -> void:
 	position = spawn_position
 	velocity = Vector2.ZERO
 	switch_state(State.FREEFORM)
-	
+
+
+func on_kickoff_started() -> void:
+	pass_to(spawn_position + Vector2.DOWN * KICKOFF_PASS_DISTANCE, 0)
 
 
