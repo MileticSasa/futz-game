@@ -62,6 +62,7 @@ func _ready() -> void:
 	permanent_damage_emit_area.body_entered.connect(on_tackle_player.bind())
 	spawn_position = position
 	GameEvents.team_scored.connect(on_team_scored.bind())
+	GameEvents.game_over.connect(on_game_over.bind())
 	var initial_position := kickoff_position if country == GameManager.countries[0] else spawn_position
 	switch_state(State.RESETING, PlayerStateData.new().set_reset_position(initial_position))
 
@@ -199,6 +200,13 @@ func control_ball() -> void:
 
 func is_ready_for_kickoff() -> bool:
 	return current_state != null and current_state.is_ready_for_kickoff()
+
+
+func on_game_over(country_winner: String) -> void:
+	if country == country_winner:
+		switch_state(Player.State.CELEBRATING)
+	else:
+		switch_state(Player.State.MOURNING)
 
 
 func on_tackle_player(player: Player) -> void:
