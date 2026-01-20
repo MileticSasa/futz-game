@@ -5,6 +5,7 @@ class_name PlayerStatePassing
 func _enter_tree() -> void:
 	animation_player.play("kick")
 	player.velocity = Vector2.ZERO
+	SoundPlayer.play(SoundPlayer.Sound.PASS)
 
 
 func on_animation_complete() -> void:
