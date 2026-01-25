@@ -1,4 +1,4 @@
-extends Control
+extends Screen
 class_name TeamSelectionScreen
 
 const FLAG_ANCHOR_POINT := Vector2(35, 80)
@@ -30,6 +30,9 @@ func _process(_delta: float) -> void:
 			for action: KeyUtils.Action in move_dirs.keys():
 				if KeyUtils.is_action_just_pressed(selector.control_scheme, action):
 					try_navigate(i, move_dirs[action])
+	if not flag_selectors[0].is_selected and KeyUtils.is_action_just_pressed(Player.ControlScheme.P1, KeyUtils.Action.PASS):
+		SoundPlayer.play(SoundPlayer.Sound.UI_NAV)
+		transition_screen(SoccerGame.ScreenType.MAIN_MENU)
 
 
 func place_flags() -> void:
@@ -50,6 +53,7 @@ func try_navigate(selector_index: int, direction: Vector2i) -> void:
 	if rect.has_point(selection[selector_index] + direction):
 		selection[selector_index] += direction
 		var flag_index := selection[selector_index].x +selection[selector_index].y * COL_NUMBER
+		GameManager.player_setup[selector_index] = DataLoader.get_countries()[1 + flag_index] #dodajem 1 jer mi je prva zemlja default
 		flag_selectors[selector_index].position = flags_container.get_child(flag_index).position
 		SoundPlayer.play(SoundPlayer.Sound.UI_NAV)
 
@@ -64,7 +68,19 @@ func add_selector(cs: Player.ControlScheme) -> void:
 	var selector := FLAG_SELECTOR_PREFAB.instantiate()
 	selector.position = flags_container.get_child(0).position
 	selector.control_scheme = cs
+	selector.selected.connect(on_selector_selected.bind())
 	flag_selectors.append(selector)
 	flags_container.add_child(selector)
+
+
+func on_selector_selected() -> void:
+	for selector in flag_selectors:
+		if not selector.is_selected:
+			return
+	var country_p1 := GameManager.player_setup[0]
+	var country_p2 := GameManager.player_setup[1]
+	if not country_p2.is_empty() and country_p1 != country_p2:
+		GameManager.countries = [country_p2, country_p1]
+		transition_screen(SoccerGame.ScreenType.IN_GAME)
 
 
