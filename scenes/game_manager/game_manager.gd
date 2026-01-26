@@ -5,10 +5,11 @@ enum State {IN_PLAY, SCORED, RESET, KICKOF, OVERTIME, GAMEOVER}
 const DURATION_IMPACT_PAUSE := 100
 const DURATION_GAME_SECONDS := 2 * 60
 
-var countries: Array[String] = ["FRANCE", "USA"]
+var current_match: Match = null
+#var countries: Array[String] = ["FRANCE", "USA"]
 var current_state : GameState = null
 var player_setup: Array[String] = ["FRANCE", ""]
-var score: Array[int] = [0, 0]
+#var score: Array[int] = [0, 0]
 var state_factory := GameStateFactory.new()
 var time_left: float
 var time_since_impact_paused := Time.get_ticks_msec()
@@ -43,18 +44,13 @@ func switch_state(state: State, data: GameStateData = GameStateData.new()) -> vo
 
 
 func increase_score(country_scored_on: String) -> void:
-	var index := 1 if country_scored_on == countries[0] else 0
-	score[index] += 1
+	current_match.increase_score(country_scored_on)
 	GameEvents.score_changed.emit()
 
 
 func get_winner_country() -> String:
-	assert(not is_game_tied())
-	return countries[0] if score[0] > score[1] else countries[1]
-
-
-func is_game_tied() -> bool:
-	return score[0] == score[1]
+	assert(not current_match.is_tied())
+	return current_match.winner
 
 
 func is_time_up() -> bool:
@@ -67,10 +63,6 @@ func is_coop_mode() -> bool:
 
 func is_single_player_mode() -> bool:
 	return player_setup[1].is_empty()
-
-
-func has_someone_scored() -> bool:
-	return score[0] > 0 or score[1] > 0
 
 
 func on_impact_received(_impact_pos: Vector2, is_high_impact: bool) -> void:

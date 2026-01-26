@@ -8,8 +8,6 @@ var time_since_celebration := Time.get_ticks_msec()
 
 func _enter_tree() -> void:
 	manager.increase_score(game_state_data.country_scored_on)
-	#var index := 1 if game_state_data.country_scored_on == manager.countries[0] else 0
-	#manager.score[index] += 1
 	#GameEvents.score_changed.emit()
 	time_since_celebration = Time.get_ticks_msec()
 

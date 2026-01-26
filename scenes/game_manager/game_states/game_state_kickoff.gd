@@ -7,7 +7,7 @@ var valid_control_schemes := []
 func _enter_tree() -> void:
 	var country_starting := game_state_data.country_scored_on
 	if country_starting.is_empty():
-		country_starting = manager.countries[0]
+		country_starting = manager.current_match.country_home
 	if country_starting == manager.player_setup[0]:
 		valid_control_schemes.append(Player.ControlScheme.P1)
 	if country_starting == manager.player_setup[1]:
