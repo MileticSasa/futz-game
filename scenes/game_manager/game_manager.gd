@@ -3,7 +3,7 @@ extends Node
 enum State {IN_PLAY, SCORED, RESET, KICKOF, OVERTIME, GAMEOVER}
 
 const DURATION_IMPACT_PAUSE := 100
-const DURATION_GAME_SECONDS := 2 * 60
+const DURATION_GAME_SECONDS := 2 #* 60
 
 var current_match: Match = null
 #var countries: Array[String] = ["FRANCE", "USA"]
@@ -20,7 +20,6 @@ func _init() -> void:
 
 
 func _ready() -> void:
-	time_left = DURATION_GAME_SECONDS
 	GameEvents.impact_received.connect(on_impact_received.bind())
 
 
@@ -30,6 +29,7 @@ func _process(_delta: float) -> void:
 
 
 func start_game() -> void:
+	time_left = DURATION_GAME_SECONDS
 	switch_state(State.RESET)
 
 

@@ -4,7 +4,8 @@ class_name WorldScreen
 @onready var game_over_timer: Timer = $GameOverTimer
 
 
-func _enter_tree() -> void:
+func _ready() -> void:
+	game_over_timer.timeout.connect(on_transition.bind())
 	GameManager.start_game()
 	GameEvents.game_over.connect(on_game_over.bind())
 
@@ -13,9 +14,10 @@ func on_game_over(_winner: String) -> void:
 	game_over_timer.start()
 
 
-func _on_game_over_timer_timeout() -> void:
+func on_transition() -> void:
 	if screen_data.tournament != null and GameManager.current_match.winner == GameManager.player_setup[0]:
 		screen_data.tournament.advance()
 		transition_screen(SoccerGame.ScreenType.TOURNAMENT, screen_data)
 	else:
 		transition_screen(SoccerGame.ScreenType.MAIN_MENU)
+

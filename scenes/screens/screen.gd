@@ -3,8 +3,14 @@ class_name Screen
 
 signal screen_transition_requested(new_screen: SoccerGame.ScreenType, data: ScreenData)
 
+@export var music: MusicPlayer.Music
+
 var game: SoccerGame = null
 var screen_data: ScreenData = null
+
+
+func _enter_tree() -> void:
+	MusicPlayer.play_music(music)
 
 
 func setup(context_game: SoccerGame, context_data: ScreenData) -> void:
