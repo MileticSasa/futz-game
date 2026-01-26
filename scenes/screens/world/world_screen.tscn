@@ -145,3 +145,9 @@ polygon = PackedVector2Array(14, -1, 28, -1, 14, 115, 0, 115)
 position = Vector2(425, 180)
 
 [node name="UI" parent="." instance=ExtResource("11_awu2r")]
+
+[node name="GameOverTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="GameOverTimer" to="." method="_on_game_over_timer_timeout"]
