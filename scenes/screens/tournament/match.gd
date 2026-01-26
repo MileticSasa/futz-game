@@ -35,3 +35,10 @@ func update_match_info() -> void:
 	final_score = "%d - %d" % [max(goals_home, goals_away), min(goals_home, goals_away)]
 
 
+func resolve() -> void:
+	while is_tied():
+		goals_home = randi_range(0, 6)
+		goals_away = randi_range(0, 6)
+	update_match_info()
+
+
